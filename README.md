@@ -1,3 +1,2 @@
-# flutter_application_1
-
-A new Flutter project.
+# 校园集市Flutter版
+## app 复刻

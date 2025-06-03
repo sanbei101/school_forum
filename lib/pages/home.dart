@@ -1,30 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:school_forum/api/post.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
-}
-
-class PostModel {
-  final String avatar;
-  final String username;
-  final String tag;
-  final String timeAgo;
-  final String content;
-  final List<String> images;
-  final int likeCount;
-
-  PostModel({
-    required this.avatar,
-    required this.username,
-    required this.tag,
-    required this.timeAgo,
-    required this.content,
-    required this.images,
-    this.likeCount = 0,
-  });
 }
 
 final List<PostModel> basePosts = [

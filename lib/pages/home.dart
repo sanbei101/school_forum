@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/api/post.dart';
+import 'package:school_forum/main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,47 +9,35 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-final List<PostModel> basePosts = [
-  PostModel(
-    avatar: '🙋‍♀️',
-    username: '美好的时时',
-    tag: '本科生',
-    timeAgo: '刚刚',
-    content:
-        '回忆一下植物学和植物学实验\n孟雷老师的课。宝宝们回忆一下去年考了什么好吧，题型和具体分值，要是能想起来具体的名词解释、填空选择，大题问题就更好了，留下微信号我加你给你发红包🧧',
-    images: ['https://placehold.co/600x400/png'],
-  ),
-  PostModel(
-    avatar: '🐦',
-    username: '偷外卖必挂',
-    tag: '硕士生',
-    timeAgo: '刚刚',
-    content:
-        '赢赢赢。其他农大的p图冒充中农\n原来我们的小破农也是别人的白月光，期末又被压塔的背又挺起来了😩（关键是又是一个折腾yolo的还让评论区质疑我农水平了😂）',
-    images: [
-      'https://placehold.co/600x400/png',
-      'https://placehold.co/600x400/png',
-      'https://placehold.co/600x400/png',
-    ],
-    likeCount: 1,
-  ),
-  PostModel(
-    avatar: '🐹',
-    username: 'lzl',
-    tag: '高中生',
-    timeAgo: '刚刚',
-    content: '求助程序设计b期末考试\n请问在哪里看考试时间呀',
-    images: [],
-  ),
-];
-
-final List<PostModel> posts = List.generate(
-  10,
-  (index) => basePosts[index % basePosts.length],
-);
-
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  List<PostModel> _posts = [];
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPosts();
+  }
+
+  Future<void> _fetchPosts() async {
+    setState(() {
+      _loading = true;
+    });
+    try {
+      _posts = await PostApi.getPosts();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('加载帖子失败: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +58,24 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                itemCount: posts.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  return _buildPostItem(posts[index]);
-                },
-              ),
+              child:
+                  _loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _posts.isEmpty
+                      ? const Center(
+                        child: Text(
+                          '暂无帖子',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      )
+                      : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: _posts.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 16),
+                        itemBuilder: (context, index) {
+                          return _buildPostItem(_posts[index]);
+                        },
+                      ),
             ),
           ],
         ),
@@ -91,6 +90,9 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _currentIndex = index;
           });
+          if (index == 3) {
+            Navigator.pushReplacementNamed(context, AppRoutes.me);
+          }
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.store), label: '集市'),
@@ -206,7 +208,13 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.grey[800],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Image.network(post.images[index], fit: BoxFit.cover),
+                  child: Image.network(
+                    post.images[index],
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.broken_image, color: Colors.red);
+                    },
+                  ),
                 );
               },
             ),
@@ -214,6 +222,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 12),
           // 底部操作栏
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.chat_bubble_outline,
@@ -221,15 +230,44 @@ class _HomePageState extends State<HomePage> {
                 size: 20,
               ),
               const Spacer(),
-              if (post.likeCount > 0) ...[
-                Icon(Icons.favorite, color: Colors.red, size: 20),
-                const SizedBox(width: 4),
-                Text(
-                  post.likeCount.toString(),
-                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
+
+              IconButton(
+                icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (child, animation) =>
+                          ScaleTransition(scale: animation, child: child),
+                  child: Icon(
+                    post.likeCount > 0 ? Icons.favorite : Icons.favorite_border,
+                    color: post.likeCount > 0 ? Colors.red : Colors.grey[400],
+                    size: 20,
+                  ),
                 ),
-              ] else
-                Icon(Icons.favorite_border, color: Colors.grey[400], size: 20),
+                onPressed: () async {
+                  try {
+                    await PostApi.likePost(post.id);
+                    setState(() {
+                      post.likeCount++;
+                    });
+                  } catch (e) {
+                    if (!mounted) return;
+                    setState(() {
+                      post.likeCount =
+                          post.likeCount > 0 ? post.likeCount - 1 : 0;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('点赞失败: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+              Text(
+                post.likeCount > 0 ? '${post.likeCount} 赞' : '赞',
+                style: TextStyle(color: Colors.grey[400], fontSize: 12),
+              ),
             ],
           ),
         ],

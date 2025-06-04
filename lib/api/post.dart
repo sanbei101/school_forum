@@ -1,15 +1,17 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:school_forum/api/supabase.dart';
 
 class PostModel {
+  final int id;
   final String avatar;
   final String username;
   final String tag;
   final String timeAgo;
   final String content;
   final List<String> images;
-  final int likeCount;
+  int likeCount;
 
   PostModel({
+    required this.id,
     required this.avatar,
     required this.username,
     required this.tag,
@@ -19,8 +21,6 @@ class PostModel {
     this.likeCount = 0,
   });
 }
-
-final supabase = Supabase.instance.client;
 
 class PostApi {
   static Future<void> createPost(PostModel post) async {
@@ -39,6 +39,7 @@ class PostApi {
     final res = await supabase.from('posts').select();
     return (res as List).map((item) {
       return PostModel(
+        id: item['id'],
         avatar: item['avatar'],
         username: item['username'],
         tag: item['tag'],
@@ -48,5 +49,19 @@ class PostApi {
         likeCount: item['like_count'] ?? 0,
       );
     }).toList();
+  }
+
+  static Future<void> likePost(int postId) async {
+    final res =
+        await supabase
+            .from('posts')
+            .select('like_count')
+            .eq('id', postId)
+            .single();
+    final current = res['like_count'] ?? 0;
+    await supabase
+        .from('posts')
+        .update({'like_count': current + 1})
+        .eq('id', postId);
   }
 }

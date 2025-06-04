@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/pages/home.dart';
 import 'package:school_forum/pages/login.dart';
+import 'package:school_forum/pages/me.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const supabaseUrl = 'https://synuuwhejivukiaodagq.supabase.co';
@@ -15,6 +16,7 @@ Future<void> main() async {
 class AppRoutes {
   static const String home = 'home';
   static const String login = 'login';
+  static const String me = 'me';
 }
 
 class MyApp extends StatelessWidget {
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.home: (context) => const HomePage(),
         AppRoutes.login: (context) => const LoginPage(),
+        AppRoutes.me: (context) => const MePage(),
       },
       initialRoute: AppRoutes.login,
     );

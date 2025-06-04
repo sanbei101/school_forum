@@ -121,7 +121,7 @@ class _MePageState extends State<MePage> {
                         border: Border.all(color: Colors.white, width: 3),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black,
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -133,7 +133,7 @@ class _MePageState extends State<MePage> {
                           _generateAvatarUrl(user?.username),
                         ),
                         backgroundColor: Colors.grey[800],
-                        onBackgroundImageError: (_, __) {},
+                        onBackgroundImageError: (_, _) {},
                         child:
                             user?.username == null
                                 ? const Icon(

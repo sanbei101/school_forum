@@ -51,6 +51,31 @@ class PostApi {
     }).toList();
   }
 
+  static Future<List<PostModel>> searchPosts(String query) async {
+    if (query.trim().isEmpty) {
+      return [];
+    }
+
+    final res = await supabase
+        .from('posts')
+        .select()
+        .or('content.ilike.%$query%,username.ilike.%$query%,tag.ilike.%$query%')
+        .order('created_at', ascending: false);
+
+    return (res as List).map((item) {
+      return PostModel(
+        id: item['id'],
+        avatar: item['avatar'],
+        username: item['username'],
+        tag: item['tag'],
+        timeAgo: item['time_ago'],
+        content: item['content'],
+        images: List<String>.from(item['images']),
+        likeCount: item['like_count'] ?? 0,
+      );
+    }).toList();
+  }
+
   static Future<void> likePost(int postId) async {
     final res =
         await supabase

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/api/post.dart';
-import 'package:school_forum/main.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,7 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
   List<PostModel> _posts = [];
   bool _loading = false;
 
@@ -79,33 +77,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF1A1A1A),
-        selectedItemColor: const Color(0xFF00D4AA),
-        unselectedItemColor: Colors.grey,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          if (index == 3) {
-            Navigator.pushReplacementNamed(context, AppRoutes.me);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: '集市'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: '消息',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '我的',
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

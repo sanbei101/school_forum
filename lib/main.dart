@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_forum/pages/home.dart';
 import 'package:school_forum/pages/login.dart';
 import 'package:school_forum/pages/me.dart';
+import 'package:school_forum/pages/search.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const supabaseUrl = 'https://synuuwhejivukiaodagq.supabase.co';
@@ -14,9 +15,8 @@ Future<void> main() async {
 }
 
 class AppRoutes {
-  static const String home = 'home';
-  static const String login = 'login';
-  static const String me = 'me';
+  static const String main = '/';
+  static const String login = '/login';
 }
 
 class MyApp extends StatelessWidget {
@@ -29,11 +29,57 @@ class MyApp extends StatelessWidget {
       title: '校园集市',
       debugShowCheckedModeBanner: false,
       routes: {
-        AppRoutes.home: (context) => const HomePage(),
         AppRoutes.login: (context) => const LoginPage(),
-        AppRoutes.me: (context) => const MePage(),
+        AppRoutes.main: (context) => const MainContainer(),
       },
       initialRoute: AppRoutes.login,
+    );
+  }
+}
+
+class MainContainer extends StatefulWidget {
+  const MainContainer({super.key});
+
+  @override
+  State<MainContainer> createState() => _MainContainerState();
+}
+
+class _MainContainerState extends State<MainContainer> {
+  int _currentIndex = 0;
+  final List<Widget> _pages = [
+    const HomePage(),
+    const SearchPage(),
+    const MePage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(index: _currentIndex, children: _pages),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF1A1A1A),
+        selectedItemColor: const Color(0xFF00D4AA),
+        unselectedItemColor: Colors.grey,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.store), label: '集市'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble_outline),
+            label: '消息',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: '我的',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     LocalStorage.isLoggedIn().then((isLoggedIn) {
       if (isLoggedIn) {
         if (mounted) {
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
+          Navigator.pushReplacementNamed(context, AppRoutes.main);
         }
       }
     });
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        Navigator.pushReplacementNamed(context, AppRoutes.main);
       }
     } catch (error) {
       if (mounted) {

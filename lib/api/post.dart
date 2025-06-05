@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:school_forum/api/supabase.dart';
 
-const String bucketName = 'post_images';
+const String bucketName = 'post-images';
 
 class PostModel {
-  final int id;
+  int? id;
   final String avatar;
   final String username;
   final String tag;
@@ -15,7 +15,7 @@ class PostModel {
   int likeCount;
 
   PostModel({
-    required this.id,
+    this.id,
     required this.avatar,
     required this.username,
     required this.tag,

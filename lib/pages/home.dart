@@ -331,7 +331,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () async {
                   try {
-                    await PostApi.likePost(post.id);
+                    await PostApi.likePost(post.id!);
                     setState(() {
                       post.likeCount++;
                     });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:school_forum/api/local_storage.dart';
 import 'package:school_forum/api/post.dart';
 
 class AddPage extends StatefulWidget {
@@ -21,8 +22,8 @@ class _AddPageState extends State<AddPage> {
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
 
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}_${picked.name}';
-    // 调用PostApi上传
+    final rawName = picked.name.replaceAll(RegExp(r'[^\w\.-]'), '_');
+    final fileName = '${DateTime.now().millisecondsSinceEpoch}_$rawName';
     final url = await PostApi.uploadImageToSupabase(picked.path, fileName);
 
     setState(() {
@@ -129,16 +130,52 @@ class _AddPageState extends State<AddPage> {
     );
   }
 
-  void _publishPost() {
+  void _publishPost() async {
     if (_contentController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('请输入帖子内容'), backgroundColor: Colors.red),
       );
       return;
     }
+    final user = await LocalStorage.getUser();
+    if (user == null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('用户未登录'), backgroundColor: Colors.red),
+      );
+      return;
+    }
+    final post = PostModel(
+      avatar: "123",
+      username: user!.username,
+      tag: widget.selectedTag,
+      timeAgo: "刚刚",
+      content: _contentController.text.trim(),
+      images: _imageUrls,
+      likeCount: 0,
+    );
 
-    // TODO: 调用 API 发布帖子
-    Navigator.pop(context);
+    PostApi.createPost(post)
+        .then((_) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('帖子发布成功'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            Navigator.pop(context);
+          }
+        })
+        .catchError((error) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('发布失败: $error'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        });
   }
 
   @override

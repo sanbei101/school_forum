@@ -46,6 +46,10 @@ class MainContainer extends StatefulWidget {
 
 class _MainContainerState extends State<MainContainer> {
   int _currentIndex = 0;
+
+  late final PageController _pageController = PageController(
+    initialPage: _currentIndex,
+  );
   final List<Widget> _pages = [
     const HomePage(),
     const SearchPage(),
@@ -55,7 +59,11 @@ class _MainContainerState extends State<MainContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF1A1A1A),
@@ -66,6 +74,7 @@ class _MainContainerState extends State<MainContainer> {
           setState(() {
             _currentIndex = index;
           });
+          _pageController.jumpToPage(index);
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.store), label: '集市'),

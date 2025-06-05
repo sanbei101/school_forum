@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:school_forum/api/supabase.dart';
+
+const String bucketName = 'post_images';
 
 class PostModel {
   final int id;
@@ -88,5 +92,17 @@ class PostApi {
         .from('posts')
         .update({'like_count': current + 1})
         .eq('id', postId);
+  }
+
+  static Future<String> uploadImageToSupabase(
+    String filePath,
+    String fileName,
+  ) async {
+    final file = File(filePath);
+    await supabase.storage.from(bucketName).upload(fileName, file);
+
+    final url = supabase.storage.from(bucketName).getPublicUrl(fileName);
+
+    return url;
   }
 }

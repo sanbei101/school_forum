@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/api/post.dart';
+import 'package:school_forum/pages/add.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +12,122 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<PostModel> _posts = [];
   bool _loading = false;
+
+  final List<Map<String, dynamic>> _postTypes = [
+    {'name': '交友互配', 'icon': Icons.people, 'color': Color(0xFFFF6B6B)},
+    {'name': '二手交易', 'icon': Icons.shopping_bag, 'color': Color(0xFF4ECDC4)},
+    {'name': '学习交流', 'icon': Icons.school, 'color': Color(0xFF45B7D1)},
+    {'name': '活动通知', 'icon': Icons.event, 'color': Color(0xFFFFA726)},
+    {'name': '求助问答', 'icon': Icons.help, 'color': Color(0xFF9C27B0)},
+    {'name': '其他', 'icon': Icons.more_horiz, 'color': Color(0xFF78909C)},
+  ];
+
+  void _showPostTypeSelector() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder:
+          (context) => Container(
+            height: MediaQuery.of(context).size.height * 0.5,
+            decoration: const BoxDecoration(
+              color: Color(0xFF2A2A2A),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Column(
+              children: [
+                // 拖拽指示器
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[600],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                // 标题
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    '选择帖子类型',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                // 类型网格
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 3,
+                          ),
+                      itemCount: _postTypes.length,
+                      itemBuilder: (context, index) {
+                        final postType = _postTypes[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        AddPage(selectedTag: postType['name']),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF3A3A3A),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: postType['color'].withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  postType['icon'],
+                                  color: postType['color'],
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  postType['name'],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+    );
+  }
 
   @override
   void initState() {
@@ -79,9 +196,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // 添加新帖子功能
-        },
+        onPressed: _showPostTypeSelector,
         backgroundColor: const Color(0xFF00D4AA),
         child: const Icon(Icons.add, color: Colors.white),
       ),

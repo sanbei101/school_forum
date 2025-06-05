@@ -58,7 +58,6 @@ class _MessagePageState extends State<MessagePage> {
       '系统通知标题',
       '这是一条系统通知内容',
       platformChannelSpecifics,
-      payload: 'item x',
     );
   }
 

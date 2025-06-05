@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_forum/pages/home.dart';
 import 'package:school_forum/pages/login.dart';
 import 'package:school_forum/pages/me.dart';
+import 'package:school_forum/pages/message.dart';
 import 'package:school_forum/pages/search.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -53,6 +54,7 @@ class _MainContainerState extends State<MainContainer> {
   final List<Widget> _pages = [
     const HomePage(),
     const SearchPage(),
+    const MessagePage(),
     const MePage(),
   ];
 

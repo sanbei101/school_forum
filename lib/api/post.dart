@@ -10,11 +10,11 @@ class PostModel {
   final int id;
   final UserModel user;
   final String tag;
-  final String createTime;
   final String title;
   final String content;
   final List<String> images;
   final List<CommentModel> comments;
+  final String createTime;
   int likeCount;
 
   PostModel({
@@ -290,7 +290,7 @@ class PostApi {
             user:users(*)
           )
         ''')
-          .textSearch('content', keyword);
+          .or('title.ilike.%$keyword%,content.ilike.%$keyword%'); // 在标题和内容中搜索
 
       if (limit != null) {
         query.limit(limit);

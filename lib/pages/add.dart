@@ -15,24 +15,16 @@ class AddPage extends StatefulWidget {
 class _AddPageState extends State<AddPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-  final List<String> _imageUrls = [];
+  final List<XFile> _pickedImages = [];
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked == null) return;
 
-    final rawName = picked.name.replaceAll(RegExp(r'[^\w\.-]'), '_');
-    final fileName = '${DateTime.now().millisecondsSinceEpoch}_$rawName';
-    final url = await PostApi.uploadImageToSupabase(picked.path, fileName);
-
     setState(() {
-      _imageUrls.add(url);
+      _pickedImages.add(picked);
     });
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('图片上传成功'), backgroundColor: Colors.green),
-    );
   }
 
   @override
@@ -137,45 +129,35 @@ class _AddPageState extends State<AddPage> {
       );
       return;
     }
-    final user = await LocalStorage.getUser();
-    if (user == null && mounted) {
+    final userId = await LocalStorage.getUserId();
+    if (userId == null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('用户未登录'), backgroundColor: Colors.red),
       );
       return;
     }
-    final post = PostModel(
-      avatar: "123",
-      username: user!.username,
+    final post = await PostApi.createPost(
+      userId: userId!,
       tag: widget.selectedTag,
-      timeAgo: "刚刚",
+      title: _titleController.text.trim(),
       content: _contentController.text.trim(),
-      images: _imageUrls,
-      likeCount: 0,
+      imageFiles: _pickedImages,
     );
-
-    PostApi.createPost(post)
-        .then((_) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('帖子发布成功'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            Navigator.pop(context);
-          }
-        })
-        .catchError((error) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('发布失败: $error'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        });
+    if (post == null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('发布失败，请稍后再试'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('发布成功'), backgroundColor: Colors.green),
+      );
+      Navigator.pop(context);
+    }
   }
 
   @override

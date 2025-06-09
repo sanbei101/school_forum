@@ -43,12 +43,17 @@ class _MessagePageState extends State<MessagePage> {
       FlutterLocalNotificationsPlugin();
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
+
+    _initNotification();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _initNotification() async {
     if (await Permission.notification.isDenied) {
       await Permission.notification.request();
     }
-
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 

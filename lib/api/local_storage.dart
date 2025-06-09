@@ -36,6 +36,11 @@ class LocalStorage {
     return UserModel.fromJson(userMap);
   }
 
+  static Future<String?> getUserId() async {
+    final user = await getUser();
+    return user?.id;
+  }
+
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyAccessToken);

@@ -29,7 +29,7 @@ class _SearchPageState extends State<SearchPage> {
     });
 
     try {
-      final results = await PostApi.searchPosts(query);
+      final results = await PostApi.searchPosts(keyword: query);
       setState(() {
         searchResults = results;
         isSearching = false;
@@ -200,12 +200,6 @@ class _SearchPageState extends State<SearchPage> {
             // 用户信息
             Row(
               children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(post.avatar),
-                  backgroundColor: Colors.grey[300],
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +207,7 @@ class _SearchPageState extends State<SearchPage> {
                       Row(
                         children: [
                           Text(
-                            post.username,
+                            post.user.username,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
@@ -242,7 +236,7 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       ),
                       Text(
-                        post.timeAgo,
+                        post.createTime,
                         style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ],

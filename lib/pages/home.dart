@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
       _loading = true;
     });
     try {
-      _posts = await PostApi.getPosts();
+      _posts = await PostApi.getAllPosts();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -219,7 +219,10 @@ class _HomePageState extends State<HomePage> {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.grey[800],
-                child: Text(post.avatar, style: const TextStyle(fontSize: 16)),
+                child: Text(
+                  post.user.username,
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -229,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Text(
-                          post.username,
+                          post.user.username,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -257,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     Text(
-                      post.timeAgo,
+                      post.createTime,
                       style: TextStyle(color: Colors.grey[400], fontSize: 12),
                     ),
                   ],
@@ -331,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 onPressed: () async {
                   try {
-                    await PostApi.likePost(post.id!);
+                    await PostApi.likePost(post.id);
                     setState(() {
                       post.likeCount++;
                     });

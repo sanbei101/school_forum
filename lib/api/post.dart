@@ -154,11 +154,7 @@ class PostApi {
     try {
       final query = supabase.from('posts').select('''
           *,
-          user:users(*),
-          comments:comments(
-            *,
-            user:users(*)
-          )
+          user:users(*)
         ''');
 
       if (limit != null) {

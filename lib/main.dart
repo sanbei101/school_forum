@@ -4,6 +4,7 @@ import 'package:school_forum/pages/login.dart';
 import 'package:school_forum/pages/me.dart';
 import 'package:school_forum/pages/message.dart';
 import 'package:school_forum/pages/search.dart';
+import 'package:school_forum/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const supabaseUrl = 'https://synuuwhejivukiaodagq.supabase.co';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       title: '校园集市',
       debugShowCheckedModeBanner: false,
       routes: {

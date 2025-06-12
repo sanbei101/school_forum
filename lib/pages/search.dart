@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/api/post.dart';
+import 'package:school_forum/theme.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -46,32 +47,29 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          '搜索帖子',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
-        ),
-        iconTheme: const IconThemeData(color: Colors.black87),
-      ),
+      appBar: AppBar(title: const Text('搜索帖子')),
       body: Column(
         children: [
           // 搜索框区域
           Container(
-            color: Colors.white,
+            color: context.colorScheme.surface,
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
               onChanged: _performSearch,
               decoration: InputDecoration(
                 hintText: '搜索帖子内容、用户名或标签...',
-                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: context.colorScheme.onSurface,
+                ),
                 suffixIcon:
                     _searchController.text.isNotEmpty
                         ? IconButton(
-                          icon: const Icon(Icons.clear, color: Colors.grey),
+                          icon: Icon(
+                            Icons.clear,
+                            color: context.colorScheme.onSurface,
+                          ),
                           onPressed: () {
                             _searchController.clear();
                             _performSearch('');
@@ -79,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
                         )
                         : null,
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: context.colorScheme.surfaceContainer,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -109,11 +107,15 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: context.colorScheme.error,
+            ),
             const SizedBox(height: 16),
             Text(
               errorMessage!,
-              style: TextStyle(fontSize: 16, color: Colors.red[600]),
+              style: TextStyle(fontSize: 16, color: context.colorScheme.error),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -130,17 +132,11 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search, size: 64, color: Colors.grey[400]),
+            Icon(Icons.search, size: 64, color: context.colorScheme.onSurface),
             const SizedBox(height: 16),
-            Text(
-              '输入关键词搜索帖子',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
+            Text('输入关键词搜索帖子', style: context.textTheme.bodyMedium),
             const SizedBox(height: 8),
-            Text(
-              '可搜索帖子内容、用户名或标签',
-              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-            ),
+            Text('可搜索帖子内容、用户名或标签', style: context.textTheme.labelMedium),
           ],
         ),
       );
@@ -151,17 +147,15 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: context.colorScheme.onSurface,
+            ),
             const SizedBox(height: 16),
-            Text(
-              '未找到相关帖子',
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
+            Text('未找到相关帖子', style: context.textTheme.bodyMedium),
             const SizedBox(height: 8),
-            Text(
-              '试试其他关键词',
-              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-            ),
+            Text('试试其他关键词', style: context.textTheme.labelMedium),
           ],
         ),
       );
@@ -181,11 +175,11 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 10),
+            color: context.colorScheme.shadow,
             spreadRadius: 1,
             blurRadius: 6,
             offset: const Offset(0, 2),
@@ -208,10 +202,7 @@ class _SearchPageState extends State<SearchPage> {
                         children: [
                           Text(
                             post.user.username,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                            style: context.textTheme.bodyLarge,
                           ),
                           if (post.tag.isNotEmpty) ...[
                             const SizedBox(width: 8),
@@ -221,15 +212,12 @@ class _SearchPageState extends State<SearchPage> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue[50],
+                                color: context.colorScheme.secondaryContainer,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 post.tag,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.blue[700],
-                                ),
+                                style: context.textTheme.labelSmall,
                               ),
                             ),
                           ],
@@ -237,7 +225,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       Text(
                         post.createTime,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        style: context.textTheme.labelSmall,
                       ),
                     ],
                   ),
@@ -247,10 +235,7 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(height: 12),
 
             // 帖子内容
-            Text(
-              post.content,
-              style: const TextStyle(fontSize: 15, height: 1.4),
-            ),
+            Text(post.content, style: context.textTheme.bodyMedium),
 
             // 图片展示
             if (post.images.isNotEmpty) ...[
@@ -263,12 +248,13 @@ class _SearchPageState extends State<SearchPage> {
             // 点赞按钮
             Row(
               children: [
-                Icon(Icons.favorite_border, size: 18, color: Colors.grey[600]),
-                const SizedBox(width: 4),
-                Text(
-                  '${post.likeCount}',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                Icon(
+                  Icons.favorite_border,
+                  size: 18,
+                  color: context.colorScheme.onSurface,
                 ),
+                const SizedBox(width: 4),
+                Text('${post.likeCount}', style: context.textTheme.labelMedium),
               ],
             ),
           ],
@@ -291,9 +277,12 @@ class _SearchPageState extends State<SearchPage> {
           errorBuilder: (context, error, stackTrace) {
             return Container(
               height: 200,
-              color: Colors.grey[300],
-              child: const Center(
-                child: Icon(Icons.broken_image, color: Colors.grey),
+              color: context.colorScheme.errorContainer,
+              child: Center(
+                child: Icon(
+                  Icons.broken_image,
+                  color: context.colorScheme.onErrorContainer,
+                ),
               ),
             );
           },
@@ -318,9 +307,12 @@ class _SearchPageState extends State<SearchPage> {
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.grey),
+                color: context.colorScheme.errorContainer,
+                child: Center(
+                  child: Icon(
+                    Icons.broken_image,
+                    color: context.colorScheme.onErrorContainer,
+                  ),
                 ),
               );
             },

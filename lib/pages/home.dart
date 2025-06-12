@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_forum/api/post.dart';
 import 'package:school_forum/pages/add.dart';
 import 'package:school_forum/pages/post.dart';
+import 'package:school_forum/theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,13 +27,13 @@ class _HomePageState extends State<HomePage> {
   void _showPostTypeSelector() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colorScheme.primaryContainer,
       isScrollControlled: true,
       builder:
           (context) => Container(
             height: MediaQuery.of(context).size.height * 0.5,
-            decoration: const BoxDecoration(
-              color: Color(0xFF2A2A2A),
+            decoration: BoxDecoration(
+              color: context.colorScheme.primaryContainer,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -40,13 +41,12 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Column(
               children: [
-                // 拖拽指示器
                 Container(
                   margin: const EdgeInsets.only(top: 12),
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey[600],
+                    color: context.colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -55,11 +55,7 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(20),
                   child: Text(
                     '选择帖子类型',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                 ),
                 // 类型网格
@@ -91,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFF3A3A3A),
+                              color: context.colorScheme.primaryContainer,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: postType['color'].withOpacity(0.3),
@@ -109,11 +105,7 @@ class _HomePageState extends State<HomePage> {
                                 const SizedBox(width: 12),
                                 Text(
                                   postType['name'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: context.textTheme.bodyMedium,
                                 ),
                               ],
                             ),
@@ -145,7 +137,10 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载帖子失败: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('加载帖子失败: $e'),
+            backgroundColor: context.colorScheme.errorContainer,
+          ),
         );
       }
     } finally {
@@ -158,30 +153,22 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
       body: SafeArea(
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: const Text(
-                '赞噢校园集市',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: Text('赞噢校园集市', style: context.textTheme.headlineMedium),
             ),
             Expanded(
               child:
                   _loading
                       ? const Center(child: CircularProgressIndicator())
                       : _posts.isEmpty
-                      ? const Center(
+                      ? Center(
                         child: Text(
                           '暂无帖子',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          style: context.textTheme.labelLarge,
                         ),
                       )
                       : ListView.separated(
@@ -198,8 +185,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showPostTypeSelector,
-        backgroundColor: const Color(0xFF00D4AA),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: Icon(Icons.add, color: context.colorScheme.onPrimaryContainer),
       ),
     );
   }
@@ -216,7 +202,7 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF2A2A2A),
+          color: context.colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -227,10 +213,10 @@ class _HomePageState extends State<HomePage> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: Colors.grey[800],
+                  backgroundColor: context.colorScheme.onPrimary,
                   child: Text(
-                    post.user.username,
-                    style: const TextStyle(fontSize: 16),
+                    post.user.username[0],
+                    style: context.textTheme.titleMedium,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -242,11 +228,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Text(
                             post.user.username,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: context.textTheme.labelLarge,
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -255,39 +237,29 @@ class _HomePageState extends State<HomePage> {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0066CC),
+                              color: context.colorScheme.secondary,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               post.tag,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                              ),
+                              style: context.textTheme.labelMedium,
                             ),
                           ),
                         ],
                       ),
                       Text(
                         post.createTime,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                        style: context.textTheme.bodyMedium,
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.more_horiz, color: Colors.grey[400]),
+                Icon(Icons.more_horiz, color: context.colorScheme.onPrimary),
               ],
             ),
             const SizedBox(height: 12),
             // 帖子内容
-            Text(
-              post.content,
-              style: TextStyle(
-                color: Colors.grey[300],
-                fontSize: 14,
-                height: 1.4,
-              ),
-            ),
+            Text(post.content, style: context.textTheme.bodyMedium),
             if (post.images.isNotEmpty) ...[
               const SizedBox(height: 12),
               GridView.builder(
@@ -301,21 +273,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 itemCount: post.images.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Image.network(
-                      post.images[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.broken_image,
-                          color: Colors.red,
-                        );
-                      },
-                    ),
+                  return Image.network(
+                    post.images[index],
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.broken_image,
+                        color: context.colorScheme.error,
+                      );
+                    },
                   );
                 },
               ),
@@ -327,7 +293,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Icon(
                   Icons.chat_bubble_outline,
-                  color: Colors.grey[400],
+                  color: context.colorScheme.onPrimaryContainer,
                   size: 20,
                 ),
                 const Spacer(),
@@ -342,7 +308,10 @@ class _HomePageState extends State<HomePage> {
                       post.likeCount > 0
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: post.likeCount > 0 ? Colors.red : Colors.grey[400],
+                      color:
+                          post.likeCount > 0
+                              ? context.colorScheme.primary
+                              : context.colorScheme.surface,
                       size: 20,
                     ),
                   ),
@@ -361,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('点赞失败: $e'),
-                          backgroundColor: Colors.red,
+                          backgroundColor: context.colorScheme.error,
                         ),
                       );
                     }
@@ -369,7 +338,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Text(
                   post.likeCount > 0 ? '${post.likeCount} 赞' : '赞',
-                  style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  style: context.textTheme.labelMedium,
                 ),
               ],
             ),

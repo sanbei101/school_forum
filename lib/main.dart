@@ -70,9 +70,6 @@ class _MainContainerState extends State<MainContainer> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF1A1A1A),
-        selectedItemColor: const Color(0xFF00D4AA),
-        unselectedItemColor: Colors.grey,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {

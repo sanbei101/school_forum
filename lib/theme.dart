@@ -1,39 +1,23 @@
 import 'package:flutter/material.dart';
 
 final ThemeData lightTheme = ThemeData(
-  useMaterial3: true,
-  brightness: Brightness.light,
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.greenAccent,
+    seedColor: Colors.lightGreen,
     brightness: Brightness.light,
-  ),
-  scaffoldBackgroundColor: Colors.white,
-
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.lightGreen,
-    foregroundColor: Colors.white,
-    elevation: 4.0,
-  ),
-
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-    ),
   ),
 );
 
 final ThemeData darkTheme = ThemeData(
-  useMaterial3: true,
-  brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.black,
+    seedColor: Colors.lightGreen,
     brightness: Brightness.dark,
   ),
-  scaffoldBackgroundColor: Colors.black,
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.black,
-    foregroundColor: Colors.white,
-  ),
 );
+
+extension ThemeExtension on BuildContext {
+  /// 获取当前主题的 TextTheme
+  TextTheme get textTheme => Theme.of(this).textTheme;
+
+  /// 获取当前主题的 ColorScheme
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+}

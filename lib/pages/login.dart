@@ -21,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // 检查是否已登录
     LocalStorage.isLoggedIn().then((isLoggedIn) {
       if (isLoggedIn) {
         if (mounted) {

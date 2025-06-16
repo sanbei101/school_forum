@@ -83,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -91,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Container(
               padding: const EdgeInsets.all(32.0),
               decoration: BoxDecoration(
-                color: const Color(0xFF2A2A2A),
+                color: context.colorScheme.surfaceContainer,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Form(
@@ -223,13 +222,10 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _signIn,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00D4AA),
-                          foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: 2,
-                          disabledBackgroundColor: Colors.grey[600],
                         ),
                         child:
                             _isLoading
@@ -255,33 +251,23 @@ class _LoginPageState extends State<LoginPage> {
                           const SnackBar(content: Text('忘记密码功能待实现')),
                         );
                       },
-                      child: const Text(
-                        '忘记密码？',
-                        style: TextStyle(color: Color(0xFF00D4AA)),
-                      ),
+                      child: const Text('忘记密码？'),
                     ),
                     const SizedBox(height: 16),
 
-                    // Sign Up Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          '没有账号？',
-                          style: TextStyle(color: Colors.grey[400]),
-                        ),
+                        Text('没有账号?', style: context.textTheme.labelLarge),
                         TextButton(
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('注册功能待实现')),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             '立即注册',
-                            style: TextStyle(
-                              color: Color(0xFF00D4AA),
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: context.textTheme.labelLarge,
                           ),
                         ),
                       ],

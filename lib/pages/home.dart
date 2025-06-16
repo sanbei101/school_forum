@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: context.colorScheme.primaryContainer,
+          color: context.colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: context.colorScheme.secondary,
+                              color: context.colorScheme.secondaryContainer,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(

@@ -59,9 +59,9 @@ class _MePageState extends State<MePage> {
     });
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text('已退出登录'),
-          backgroundColor: Color(0xFF00D4AA),
+          backgroundColor: context.colorScheme.primary,
         ),
       );
       Navigator.pushReplacementNamed(context, AppRoutes.login);

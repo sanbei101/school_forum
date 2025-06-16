@@ -50,15 +50,23 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-
-      if (response.session != null && response.user != null) {
-        await LocalStorage.saveLoginInfo(
-          accessToken: response.session!.accessToken,
-          refreshToken: response.session!.refreshToken ?? '',
-          user: UserModel.fromJson(response.user!.toJson()),
-        );
+      if (response.session == null || response.user == null) {
+        throw Exception('登录失败，请检查邮箱和密码');
       }
+      final user = response.user!;
+      await supabase.from("users").upsert({
+        "id": user.id,
+        "email": user.email,
+        "username": user.userMetadata?['username'] ?? user.email,
+        "role": user.role ?? 'user',
+        "avatar": user.userMetadata?['avatar'] ?? '',
+      }, onConflict: 'id');
 
+      await LocalStorage.saveLoginInfo(
+        accessToken: response.session!.accessToken,
+        refreshToken: response.session!.refreshToken ?? '',
+        user: UserModel.fromJson(user.toJson()),
+      );
       if (mounted) {
         Navigator.pushReplacementNamed(context, AppRoutes.main);
       }

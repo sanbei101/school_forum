@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:school_forum/api/local_storage.dart';
 import 'package:school_forum/api/post.dart';
+import 'package:school_forum/theme.dart';
 
 class AddPage extends StatefulWidget {
   final String selectedTag;
@@ -30,15 +31,10 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF2A2A2A),
-        title: Text(
-          '发布${widget.selectedTag}',
-          style: const TextStyle(color: Colors.white),
-        ),
+        title: Text('发布${widget.selectedTag}'),
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -46,14 +42,10 @@ class _AddPageState extends State<AddPage> {
             onPressed: () {
               _publishPost();
             },
-            child: const Text(
-              '发布',
-              style: TextStyle(
-                color: Color(0xFF00D4AA),
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            style: TextButton.styleFrom(
+              foregroundColor: context.colorScheme.onPrimaryContainer,
             ),
+            child: Text('发布', style: context.textTheme.bodyLarge),
           ),
         ],
       ),
@@ -66,26 +58,24 @@ class _AddPageState extends State<AddPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFF0066CC),
+                color: context.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 widget.selectedTag,
-                style: const TextStyle(color: Colors.white, fontSize: 12),
+                style: context.textTheme.labelMedium,
               ),
             ),
 
             TextField(
               controller: _titleController,
               maxLength: 30,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: const InputDecoration(
+              style: context.textTheme.bodyLarge,
+              decoration: InputDecoration(
                 hintText: '请输入标题',
-                hintStyle: TextStyle(color: Colors.grey),
+                hintStyle: TextStyle(
+                  color: context.colorScheme.onSurfaceVariant,
+                ),
                 border: InputBorder.none,
                 counterText: '',
               ),
@@ -97,10 +87,12 @@ class _AddPageState extends State<AddPage> {
                 controller: _contentController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                style: context.textTheme.bodyLarge,
+                decoration: InputDecoration(
                   hintText: '分享你想说的...',
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
                   border: InputBorder.none,
                 ),
               ),
@@ -112,7 +104,7 @@ class _AddPageState extends State<AddPage> {
                   onPressed: () {
                     _pickImage();
                   },
-                  icon: const Icon(Icons.photo, color: Colors.grey),
+                  icon: const Icon(Icons.photo),
                 ),
               ],
             ),

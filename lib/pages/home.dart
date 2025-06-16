@@ -27,13 +27,12 @@ class _HomePageState extends State<HomePage> {
   void _showPostTypeSelector() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: context.colorScheme.primaryContainer,
       isScrollControlled: true,
       builder:
           (context) => Container(
             height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
-              color: context.colorScheme.primaryContainer,
+              color: context.colorScheme.surfaceContainer,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -41,15 +40,6 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Column(
               children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 12),
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
                 // 标题
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -87,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: context.colorScheme.primaryContainer,
+                              color: context.colorScheme.surfaceBright,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: postType['color'].withOpacity(0.3),

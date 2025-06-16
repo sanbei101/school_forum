@@ -224,7 +224,7 @@ class _SearchPageState extends State<SearchPage> {
                         ],
                       ),
                       Text(
-                        post.createTime,
+                        PostApi.formatTimeAgo(post.createTime),
                         style: context.textTheme.labelSmall,
                       ),
                     ],

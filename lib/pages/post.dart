@@ -174,7 +174,7 @@ class _PostPageState extends State<PostPage> {
                 style: context.textTheme.bodyLarge,
               ),
               Text(
-                currentPost.createTime,
+                PostApi.formatTimeAgo(currentPost.createTime),
                 style: context.textTheme.labelMedium,
               ),
             ],
@@ -289,7 +289,7 @@ class _PostPageState extends State<PostPage> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      comment.createTime,
+                      PostApi.formatTimeAgo(comment.createTime),
                       style: context.textTheme.labelMedium,
                     ),
                   ],

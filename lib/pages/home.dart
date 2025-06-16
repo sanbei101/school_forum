@@ -238,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       Text(
-                        post.createTime,
+                        PostApi.formatTimeAgo(post.createTime),
                         style: context.textTheme.bodyMedium,
                       ),
                     ],

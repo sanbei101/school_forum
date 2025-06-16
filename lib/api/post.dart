@@ -306,6 +306,22 @@ class PostApi {
       throw Exception('搜索帖子失败: $e');
     }
   }
+
+  static String formatTimeAgo(String createTime) {
+    final now = DateTime.now();
+    final createDateTime = DateTime.parse(createTime);
+    final difference = now.difference(createDateTime);
+
+    if (difference.inSeconds < 60) {
+      return '刚刚';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}分钟前';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}小时前';
+    } else {
+      return '${difference.inDays}天前';
+    }
+  }
 }
 
 class CommentApi {

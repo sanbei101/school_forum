@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_forum/api/local_storage.dart';
 import 'package:school_forum/api/post.dart';
+import 'package:school_forum/theme.dart';
 
 class PostPage extends StatefulWidget {
   final PostModel post;
@@ -95,11 +96,7 @@ class _PostPageState extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('帖子详情'),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text('帖子详情')),
       body: Column(
         children: [
           // 帖子内容区域
@@ -114,19 +111,13 @@ class _PostPageState extends State<PostPage> {
                   const SizedBox(height: 16),
 
                   // 帖子标题
-                  Text(
-                    currentPost.title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  Text(currentPost.title, style: context.textTheme.titleMedium),
                   const SizedBox(height: 12),
 
                   // 帖子内容
                   Text(
                     currentPost.content,
-                    style: const TextStyle(fontSize: 16, height: 1.5),
+                    style: context.textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 16),
 
@@ -143,10 +134,7 @@ class _PostPageState extends State<PostPage> {
                   // 评论标题
                   Text(
                     '评论 (${comments.length})',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: context.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
 
@@ -183,21 +171,18 @@ class _PostPageState extends State<PostPage> {
             children: [
               Text(
                 currentPost.user.username,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                style: context.textTheme.bodyLarge,
               ),
               Text(
                 currentPost.createTime,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                style: context.textTheme.labelMedium,
               ),
             ],
           ),
         ),
         Chip(
           label: Text(currentPost.tag),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: context.colorScheme.secondaryContainer,
         ),
       ],
     );
@@ -223,7 +208,7 @@ class _PostPageState extends State<PostPage> {
                   return Container(
                     height: 200,
                     width: 200,
-                    color: Colors.grey[300],
+                    color: context.colorScheme.errorContainer,
                     child: const Icon(Icons.error),
                   );
                 },
@@ -241,7 +226,7 @@ class _PostPageState extends State<PostPage> {
         IconButton(
           onPressed: () {},
           icon: const Icon(Icons.thumb_up_outlined),
-          color: Theme.of(context).primaryColor,
+          color: context.colorScheme.secondary,
         ),
         Text('${currentPost.likeCount}'),
       ],
@@ -254,10 +239,10 @@ class _PostPageState extends State<PostPage> {
     }
 
     if (comments.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
           padding: EdgeInsets.all(32),
-          child: Text('暂无评论，快来发表第一条评论吧！', style: TextStyle(color: Colors.grey)),
+          child: Text('暂无评论，快来发表第一条评论吧！', style: context.textTheme.bodyLarge),
         ),
       );
     }
@@ -300,23 +285,17 @@ class _PostPageState extends State<PostPage> {
                   children: [
                     Text(
                       comment.user.username,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                      style: context.textTheme.bodyLarge,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       comment.createTime,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      style: context.textTheme.labelMedium,
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  comment.content,
-                  style: const TextStyle(fontSize: 14, height: 1.4),
-                ),
+                Text(comment.content, style: context.textTheme.bodySmall),
               ],
             ),
           ),
@@ -328,10 +307,7 @@ class _PostPageState extends State<PostPage> {
   Widget _buildCommentInput() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey[300]!)),
-      ),
+      decoration: BoxDecoration(color: context.colorScheme.surfaceContainer),
       child: SafeArea(
         child: Row(
           children: [
@@ -342,7 +318,7 @@ class _PostPageState extends State<PostPage> {
                   hintText: '写下你的评论...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderSide: BorderSide(color: context.colorScheme.outline),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -365,7 +341,7 @@ class _PostPageState extends State<PostPage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                       : const Icon(Icons.send),
-              color: Theme.of(context).primaryColor,
+              color: context.colorScheme.primary,
             ),
           ],
         ),

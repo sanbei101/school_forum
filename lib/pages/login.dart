@@ -3,6 +3,7 @@ import 'package:school_forum/api/local_storage.dart';
 import 'package:school_forum/api/user.dart';
 import 'package:school_forum/main.dart';
 import 'package:school_forum/api/supabase.dart';
+import 'package:school_forum/theme.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -66,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('登录失败: ${error.toString()}'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colorScheme.errorContainer,
           ),
         );
       }
@@ -99,56 +100,49 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Logo or Title
-                    const Icon(
+                    Icon(
                       Icons.school,
                       size: 80,
-                      color: Color(0xFF00D4AA),
+                      color: context.colorScheme.primary,
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      '赞噢校园集市',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    Text('赞噢校园集市', style: context.textTheme.headlineMedium),
                     const SizedBox(height: 8),
-                    Text(
-                      '欢迎回来',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[400]),
-                    ),
+                    Text('欢迎回来', style: context.textTheme.titleMedium),
                     const SizedBox(height: 32),
 
                     // Email Field
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: '邮箱',
-                        labelStyle: TextStyle(color: Colors.grey[400]),
+                        labelStyle: context.textTheme.labelLarge,
                         prefixIcon: Icon(
                           Icons.email_outlined,
-                          color: Colors.grey[400],
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey[600]!),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey[600]!),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF00D4AA),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
                             width: 2,
                           ),
                         ),
                         filled: true,
-                        fillColor: const Color(0xFF1A1A1A),
+                        fillColor: context.colorScheme.outlineVariant,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -168,20 +162,19 @@ class _LoginPageState extends State<LoginPage> {
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         labelText: '密码',
-                        labelStyle: TextStyle(color: Colors.grey[400]),
+                        labelStyle: context.textTheme.labelLarge,
                         prefixIcon: Icon(
                           Icons.lock_outline,
-                          color: Colors.grey[400],
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword
                                 ? Icons.visibility_off
                                 : Icons.visibility,
-                            color: Colors.grey[400],
+                            color: context.colorScheme.onSurfaceVariant,
                           ),
                           onPressed: () {
                             setState(() {
@@ -191,21 +184,25 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey[600]!),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey[600]!),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF00D4AA),
+                          borderSide: BorderSide(
+                            color: context.colorScheme.outline,
                             width: 2,
                           ),
                         ),
                         filled: true,
-                        fillColor: const Color(0xFF1A1A1A),
+                        fillColor: context.colorScheme.outlineVariant,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -241,17 +238,11 @@ class _LoginPageState extends State<LoginPage> {
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
-                                    ),
                                   ),
                                 )
-                                : const Text(
+                                : Text(
                                   '登录',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: context.textTheme.bodyLarge,
                                 ),
                       ),
                     ),

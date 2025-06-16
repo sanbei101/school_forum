@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:school_forum/api/local_storage.dart';
 import 'package:school_forum/api/user.dart';
 import 'package:school_forum/main.dart';
+import 'package:school_forum/theme.dart';
 
 class MePage extends StatefulWidget {
   const MePage({super.key});
@@ -72,22 +73,18 @@ class _MePageState extends State<MePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.person_outline, size: 80, color: Colors.grey[400]),
+          Icon(
+            Icons.person_outline,
+            size: 80,
+            color: context.colorScheme.onSurface,
+          ),
           const SizedBox(height: 16),
-          Text('请先登录', style: TextStyle(fontSize: 18, color: Colors.grey[400])),
+          Text('请先登录', style: context.textTheme.headlineMedium),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
               Navigator.pushNamed(context, AppRoutes.login);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF00D4AA),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
             child: const Text('去登录'),
           ),
         ],
@@ -102,12 +99,8 @@ class _MePageState extends State<MePage> {
           // 用户信息卡片
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF00D4AA), Color(0xFF00B894)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+            decoration: BoxDecoration(
+              color: context.colorScheme.surfaceContainer,
             ),
             child: SafeArea(
               child: Padding(
@@ -115,55 +108,21 @@ class _MePageState extends State<MePage> {
                 child: Column(
                   children: [
                     // 头像
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 3),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(
-                          _generateAvatarUrl(user?.username),
-                        ),
-                        backgroundColor: Colors.grey[800],
-                        onBackgroundImageError: (_, _) {},
-                        child:
-                            user?.username == null
-                                ? const Icon(
-                                  Icons.person,
-                                  size: 50,
-                                  color: Colors.white,
-                                )
-                                : null,
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(
+                        _generateAvatarUrl(user?.username),
                       ),
                     ),
                     const SizedBox(height: 16),
                     // 用户名
                     Text(
-                      user?.username ?? '用户',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      user!.username,
+                      style: context.textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 8),
                     // 邮箱
-                    if (user?.email != null)
-                      Text(
-                        user!.email,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
-                      ),
+                    Text(user!.email, style: context.textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -217,15 +176,7 @@ class _MePageState extends State<MePage> {
                   margin: const EdgeInsets.symmetric(horizontal: 16),
                   child: ElevatedButton(
                     onPressed: _logout,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade400,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text('退出登录', style: TextStyle(fontSize: 16)),
+                    child: Text('退出登录', style: context.textTheme.bodyMedium),
                   ),
                 ),
               ],
@@ -244,20 +195,16 @@ class _MePageState extends State<MePage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
+        color: context.colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF00D4AA)),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
+        leading: Icon(icon, color: context.colorScheme.secondary),
+        title: Text(title, style: context.textTheme.bodyMedium),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: context.colorScheme.secondary,
         ),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       ),
@@ -267,11 +214,13 @@ class _MePageState extends State<MePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A1A1A),
+      backgroundColor: context.colorScheme.surface,
       body:
           isLoading
-              ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF00D4AA)),
+              ? Center(
+                child: CircularProgressIndicator(
+                  color: context.colorScheme.primary,
+                ),
               )
               : isLoggedIn
               ? _buildUserProfile()

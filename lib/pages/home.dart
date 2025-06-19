@@ -13,8 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<PostModel> _posts = [];
-  bool _loading = false;
+  late Future<List<PostModel>> _postFurure;
 
   void _showPostTypeSelector() {
     showModalBottomSheet(
@@ -27,15 +26,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _fetchPosts();
+    _postFurure = _fetchPosts();
   }
 
-  Future<void> _fetchPosts() async {
+  Future<void> _onRefresh() async {
     setState(() {
-      _loading = true;
+      _postFurure = _fetchPosts();
     });
+  }
+
+  Future<List<PostModel>> _fetchPosts() async {
     try {
-      _posts = await PostApi.getAllPosts();
+      final posts = await PostApi.getAllPosts();
+      return posts;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -45,10 +48,7 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-    } finally {
-      setState(() {
-        _loading = false;
-      });
+      return Future.error(e);
     }
   }
 
@@ -63,36 +63,62 @@ class _HomePageState extends State<HomePage> {
               child: Text('赞噢校园集市', style: context.textTheme.headlineMedium),
             ),
             Expanded(
-              child:
-                  _loading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _posts.isEmpty
-                      ? Center(
-                        child: Text(
-                          '暂无帖子',
-                          style: context.textTheme.labelLarge,
-                        ),
-                      )
-                      : ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _posts.length,
-                        separatorBuilder: (_, _) => const SizedBox(height: 16),
-                        itemBuilder: (context, index) {
-                          return PostCard(
-                            post: _posts[index],
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          PostPage(post: _posts[index]),
-                                ),
-                              );
-                            },
-                          );
-                        },
+              child: FutureBuilder(
+                future: _postFurure,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('加载失败', style: context.textTheme.labelLarge),
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: _onRefresh,
+                            child: const Text('点击重试'),
+                          ),
+                        ],
                       ),
+                    );
+                  }
+
+                  final posts = snapshot.data!;
+                  if (posts.isEmpty) {
+                    return Center(
+                      child: Text(
+                        '暂无帖子，快来发布第一个吧！',
+                        style: context.textTheme.labelLarge,
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: _onRefresh,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: posts.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        return PostCard(
+                          post: posts[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => PostPage(post: posts[index]),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
